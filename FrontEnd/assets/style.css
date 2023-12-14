@@ -125,6 +125,118 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+.category-buttons {
+	display: flex;
+	justify-content: center; 
+	gap: 15px; 
+	margin-top: 60px;
+	margin-bottom: 60px; 
+  }
+a
+{
+	text-decoration: none;color: black;
+}
+#modeEditionBanner {
+    display: flex;
+    align-items: center;
+    background-color: black;
+    color: white;
+    min-height: 59px; 
+    width: 100%;
+    text-align: center;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 3.5; 
+}
+#modeEditionBanner img {
+    margin-right: 10px; 
+    height: 15px; 
+}
+  #login {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 80vh;
+  }
+  
+  #login-section {
+	text-align: center;
+	padding: 20px;
+	border-radius: 10px;
+  }
+  
+  #login-section h2 {
+	font-family: 'Syne', sans-serif;
+	font-size: 24px;
+	margin-bottom: 20px;
+  }
+  
+  form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  
+  .form-group {
+	margin-bottom: 15px;
+	text-align: left;
+  }
+  
+  label {
+	font-family: 'Syne', sans-serif;
+	font-size: 14px;
+	margin-top: 20px;
+	margin-bottom: 5px;
+	display: block;
+  }
+  
+  input {
+	width: 379px;
+	height: 51px;
+	padding: 10px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	border-radius: 5px;
+	box-sizing: border-box;
+	font-family: 'Work Sans', sans-serif;
+	font-size: 16px;
+	margin-top: 5px;
+  }
+.connect {
+	font-family: 'Syne', sans-serif;
+	font-size: 16px;
+	height: 37px;
+	border: 1.5px solid #1D6154;
+	border-radius: 60px;
+	cursor: pointer;
+	padding: 0 20px;
+	color: #FFFEF8;
+	background-color: #1D6154;
+	transition: background-color 0.3s, border-color 0.3s;
+	margin-bottom: 25px;
+  }
+ button {
+	font-family: 'Syne', sans-serif;
+	font-size: 16px;
+	height: 37px;
+	border: 1.5px solid #1D6154;
+	border-radius: 60px;
+	cursor: pointer;
+	padding: 0 20px;
+	background-color: #FFFEF8;
+	transition: background-color 0.3s, border-color 0.3s;
+  }
+  .forget {
+	color: black;
+	text-decoration: none;
+  }
+  
+  .cat-button:hover {
+	background-color: #1D6154;
+	border-color: #1D6154;
+	color: #FFFEF8;
+  }
 .gallery {
 	width: 100%;
 	display: grid;
