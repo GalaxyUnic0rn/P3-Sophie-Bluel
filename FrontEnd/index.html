@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div id="modeEditionBanner">
-		<img src="FrontEnd\assets\icons\instagram.png" alt="Logo">
+		<img src="./assets/icons/Vector.png" alt="Logo">
 		Mode Édition
 	</div>
 <header>
@@ -32,7 +32,7 @@
 <main>
 	<section id="introduction">
 		<figure>
-			<img src="./assets/images/sophie-bluel.png" alt="">
+			<img src="./assets/images/sophie-bluel.png" alt="logo">
 		</figure>
 		<article>
 			<h2>Designer d'espace</h2>
@@ -43,14 +43,13 @@
 	</section>
 	<section id="portfolio">
 		<h2>Mes Projets</h2>
-		<div class="category-buttons">
-			<button class="cat-button" id="all-btn">Tous</button>
-			<button class="cat-button" id="objects-btn">Objets</button>
-			<button class="cat-button" id="apartments-btn">Appartements</button>
-			<button class="cat-button" id="hotels-restaurants-btn">Hôtels & Restaurants</button>
-		  </div>
-		  <div class="gallery"></div>
-	</section>
+		<div id="editModeInfo">
+		  <img src="./assets/icons/group.png" alt="Logo">
+		  <span>Modifier</span>
+		</div>
+		<div class="category-buttons"></div>
+		<div class="gallery"></div>
+	  </section>
 	<section id="contact">
 		<h2>Contact</h2>
 		<p>Vous avez un projet ? Discutons-en !</p>
@@ -73,6 +72,9 @@
 		</ul>
 	</nav>
 </footer>
-
-</body>
-</html>
+<div id="galleryModal" class="modal">
+	<span class="close-modal" id="closeModalButton">&times;</span>
+	<div id="modalContent" class="modal-content">
+	  <h2 id="modalTitle" >Galerie photo</h2>
+	</div>
+  </div>
