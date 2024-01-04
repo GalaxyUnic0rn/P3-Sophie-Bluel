@@ -1,8 +1,11 @@
-const form = document.getElementById('login-form')
-form.addEventListener('submit', e => submitForm(e))
+const form = document.getElementById('login-form');
+const errorModal = document.getElementById('errorModal');
+const errorMessageModalElement = document.getElementById('errorMessageModal');
+
+form.addEventListener('submit', e => submitForm(e));
 
 function submitForm(e) {
-    e.preventDefault()
+    e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
@@ -29,6 +32,22 @@ function submitForm(e) {
         })
         .catch(error => {
             console.error('Erreur de connexion:', error.message);
+            // Affiche le message d'erreur dans la modal
+            errorMessageModalElement.textContent = error.message;
+            openErrorModal();
         });
 }
 
+// Fonction pour ouvrir la modal d'erreur
+function openErrorModal() {
+    errorModal.style.display = 'block';
+}
+
+// Fermer la modal d'erreur si l'utilisateur clique sur la croix
+const closeErrorModalButton = document.querySelector('.close');
+closeErrorModalButton.addEventListener('click', closeErrorModal);
+
+// Fonction pour fermer la modal d'erreur
+function closeErrorModal() {
+    errorModal.style.display = 'none';
+}

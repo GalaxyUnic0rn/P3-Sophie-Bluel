@@ -26,10 +26,11 @@ function fetchWorks() {
         gallery.append(...worksGallery);
         generateCategoryButtons(categoriesData);
         addEventListeners();
+        initializeGallery();
       } else {
         console.error('Aucune catégorie trouvée.');
       }
-      
+
     })
     .catch((error) => {
       console.error('Erreur lors de la récupération des données :', error);
@@ -42,7 +43,7 @@ function generateCategoryButtons(categoriesData) {
   buttonsContainer.innerHTML = '';
 
   const allBtn = document.createElement('button');
-  allBtn.classList.add('cat-button');
+  allBtn.classList.add('cat-button', 'all-category');
   allBtn.textContent = 'Tous';
   buttonsContainer.appendChild(allBtn);
 
@@ -51,8 +52,27 @@ function generateCategoryButtons(categoriesData) {
     categoryBtn.classList.add('cat-button');
     categoryBtn.textContent = category.name;
     buttonsContainer.appendChild(categoryBtn);
+
+    categoryBtn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-button').forEach(btn => btn.classList.remove('selected-category'));
+      categoryBtn.classList.add('selected-category');
+      filterWorksByCategory(category.name);
+    });
+  });
+
+  allBtn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-button').forEach(btn => btn.classList.remove('selected-category'));
+    allBtn.classList.add('selected-category');
+    filterWorksByCategory('Tous');
   });
 }
+function initializeGallery() {
+  const allBtn = document.querySelector('.all-category');
+  if (allBtn) {
+    allBtn.classList.add('selected-category'); 
+  }
+}
+
 
 function displayWorks(works) {
   const gallery = document.querySelector('#portfolio .gallery');
@@ -140,11 +160,11 @@ function openGalleryModal() {
   titleDiv.textContent = 'Galerie photo';
   modalContent.appendChild(titleDiv);
 
- 
+
   const galleryContainer = document.createElement('div');
   galleryContainer.classList.add('gallery-container');
 
-  
+
   worksData.forEach((work) => {
     const imageContainer = document.createElement('div');
     imageContainer.classList.add('image-container');
@@ -160,22 +180,26 @@ function openGalleryModal() {
 
     trashIcon.addEventListener('click', () => {
       deleteImage(work.id);
-      fetchWorks(); 
+      fetchWorks();
     });
 
     imageContainer.appendChild(image);
     imageContainer.appendChild(trashIcon);
 
     galleryContainer.appendChild(imageContainer);
+
+    const transparentBackground = document.querySelector('.transparent-background');
+    transparentBackground.style.display = 'block'; 
+  
   });
 
   modalContent.appendChild(galleryContainer);
 
- 
+
   const separatorLine = document.createElement('hr');
   separatorLine.classList.add('horizontal-line');
 
- 
+
   const addButtonContainer = document.createElement('div');
   addButtonContainer.classList.add('add-button-container');
 
@@ -200,6 +224,24 @@ function toggleImagePreviewVisibility(visible) {
 }
 
 
+function validateImage(file) {
+  const allowedFormats = ['image/jpeg', 'image/png'];
+  const maxFileSize = 4 * 1024 * 1024;
+
+  if (!allowedFormats.includes(file.type)) {
+    alert('Le format de l\'image n\'est pas valide. Veuillez utiliser JPG ou PNG.');
+    return false;
+  }
+
+  if (file.size > maxFileSize) {
+    alert('La taille de l\'image dépasse la limite de 4 Mo.');
+    return false;
+  }
+
+  return true;
+}
+
+
 function openAddPhotoModal() {
   const modalContent = document.getElementById('modalContent');
   modalContent.innerHTML = '';
@@ -211,6 +253,15 @@ function openAddPhotoModal() {
 
   const fileInputContainer = document.createElement('div');
   fileInputContainer.classList.add('file-input-container');
+  
+  
+  const logo = document.createElement('img');
+  logo.src = './assets/icons/logo-img.png'; 
+  logo.alt = 'Logo';
+  logo.classList.add('logo');
+  
+  fileInputContainer.appendChild(logo);
+
 
   const fileInputButton = document.createElement('button');
   fileInputButton.textContent = '+ Ajouter photo';
@@ -280,12 +331,20 @@ function openAddPhotoModal() {
 
   form.appendChild(categoryLabel);
 
+  const separatorLine = document.createElement('hr');
+  separatorLine.classList.add('horizontal-line');
+
+  form.appendChild(separatorLine);
+
   const submitButton = document.createElement('button');
   submitButton.type = 'submit';
   submitButton.textContent = 'Valider';
   submitButton.disabled = true;
-
+  submitButton.classList.add('validate-btn')
+ 
   form.appendChild(submitButton);
+
+
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -297,38 +356,55 @@ function openAddPhotoModal() {
 
   form.addEventListener('input', () => {
     submitButton.disabled = !form.checkValidity();
+    submitButton.style.backgroundColor = form.checkValidity() ? '#1D6154' : '#A7A7A7';
   });
 
   modalContent.appendChild(form);
 
   realFileInput.addEventListener('change', () => {
     const selectedFile = realFileInput.files[0];
-
+  
     if (selectedFile) {
-      const reader = new FileReader();
+      if (validateImage(selectedFile)) {
+        const reader = new FileReader();
+  
+        reader.onload = function (e) {
+          imagePreview.src = e.target.result;
+  
+          
+          toggleImagePreviewVisibility(true);
+  
+          fileInputContainer.style.display = 'none';
+          fileInputLabel.style.display = 'none';
+        };
 
-      reader.onload = function (e) {
-        imagePreview.src = e.target.result;
-
-        // Appeler la fonction pour afficher la section d'aperçu lorsque l'image est sélectionnée
-        toggleImagePreviewVisibility(true);
-
-        fileInputContainer.style.display = 'none';
-        fileInputLabel.style.display = 'none';
-      };
-
-      reader.readAsDataURL(selectedFile);
+        reader.readAsDataURL(selectedFile);
+      } else {
+        realFileInput.value = '';
+      }
     } else {
-      // Appeler la fonction pour masquer la section d'aperçu lorsque l'image est désélectionnée
       toggleImagePreviewVisibility(false);
-
+  
       imagePreview.src = '';
       fileInputContainer.style.display = 'block';
       fileInputLabel.style.display = 'block';
     }
   });
+  
+const backButtonContainer = document.createElement('div');
+backButtonContainer.classList.add('back-button-container');
 
-  // Appeler la fonction pour masquer la section d'aperçu au début
+const arrowLeftIcon = document.createElement('img');
+arrowLeftIcon.classList.add('back-button');
+arrowLeftIcon.src = './assets/icons/arrow-left.png'; 
+arrowLeftIcon.alt = 'Retour';
+
+arrowLeftIcon.addEventListener('click', () => openGalleryModal()); 
+
+backButtonContainer.appendChild(arrowLeftIcon);
+modalContent.appendChild(backButtonContainer);
+
+
   toggleImagePreviewVisibility(false);
 }
 
@@ -336,6 +412,7 @@ function openAddPhotoModal() {
 
 
 function validateAndSubmitForm(form) {
+  console.log('Validation du formulaire en cours...');
   const title = form.querySelector('input[name="title"]').value;
   const categorySelect = form.querySelector('select[name="category"]');
   const selectedCategoryId = categoriesData.find(category => category.name === categorySelect.value)?.id;
@@ -362,12 +439,15 @@ function validateAndSubmitForm(form) {
     reader.readAsDataURL(imageInput.files[0]);
   }
 
- 
   fileInputContainer.innerHTML = '';
   fileInputContainer.appendChild(imagePreview);
 
-  return true;
+  
+  return addImage(formData);
 }
+
+
+
 
 
 function deleteImage(imageId) {
@@ -382,8 +462,7 @@ function deleteImage(imageId) {
     .then(response => {
       if (response.status === 204) {
         console.log('Image supprimée avec succès.');
-        openGalleryModal();  
-        return fetchWorks();
+        return fetchWorks().then(() => openGalleryModal())
 
       } else if (response.status === 401) {
         console.error('Erreur : Unauthorized. L\'utilisateur n\'est pas autorisé.');
@@ -410,23 +489,24 @@ function removeImageFromModal(imageId) {
   }
 }
 function addImage(formData) {
+  console.log('La fonction addImage est appelée avec les données :', formData);
   fetch('http://localhost:5678/api/works', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: formData,
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log('Image ajoutée avec succès.');
-        fetchWorks();
-      } else {
-        throw new Error(`Erreur HTTP ${response.status}`);
-      }
-    })
-    .catch(error => {
-      console.error('Erreur lors de l\'ajout de l\'image :', error.message);
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+  },
+  body: formData,
+})
+.then(response => {
+  if (response.ok) {
+    console.log('Image ajoutée avec succès.');
+    fetchWorks();
+  } else {
+    throw new Error(`Erreur HTTP ${response.status}`);
+  }
+})
+.catch(error => {
+  console.error('Erreur lors de l\'envoi de l\'image :', error);
     });
   console.log('Données FormData :', formData);
 }
@@ -435,11 +515,11 @@ function addImage(formData) {
 function closeGalleryModal() {
   const modal = document.getElementById('galleryModal');
   modal.style.display = 'none';
+
+  const transparentBackground = document.querySelector('.transparent-background');
+  transparentBackground.style.display = 'none'; 
 }
-function closeGalleryModal() {
-  const modal = document.getElementById('galleryModal');
-  modal.style.display = 'none';
-}
+
 
 
 window.addEventListener('click', (event) => {
