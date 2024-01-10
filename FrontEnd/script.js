@@ -125,9 +125,10 @@ function filterWorksByCategory(category, worksGallery) {
       });
     } else {
       worksGallery.forEach((figure) => {
+        // Récupération des données du travail associé à la figure
         const workData = worksData.find((work) => work.title === figure.querySelector('figcaption').textContent);
         console.log('Catégorie du travail :', workData ? workData.category.name : 'Non trouvée');
-
+        // Vérification de la correspondance de la catégorie
         const trimmedCategoryNameAPI = workData ? workData.category.name.trim().toLowerCase() : 'Non trouvée';
         const trimmedCategoryNameFilter = category.trim().toLowerCase();
         console.log('Nom de la catégorie API :', trimmedCategoryNameAPI);
@@ -190,7 +191,9 @@ function openGalleryModal() {
 
     const transparentBackground = document.querySelector('.transparent-background');
     transparentBackground.style.display = 'block'; 
-  
+    transparentBackground.addEventListener('click', () => {
+      closeGalleryModal();
+    });
   });
 
   modalContent.appendChild(galleryContainer);
@@ -525,7 +528,7 @@ function closeGalleryModal() {
 window.addEventListener('click', (event) => {
   const modal = document.getElementById('galleryModal');
   if (event.target === modal) {
-    closeGalleryModal();
+   // closeGalleryModal();
   }
 });
 
